@@ -19,9 +19,9 @@ impl Default for Neuron {
         Neuron { bias: init_bias, 
             weight1: init_weight1, 
             weight2: init_weight2,
-            old_bias: init_bias.clone(),
-            old_weight1: init_weight1.clone(),
-            old_weight2: init_weight2.clone(),
+            old_bias: init_bias,
+            old_weight1: init_weight1,
+            old_weight2: init_weight2,
          }
     }
 }
@@ -76,5 +76,5 @@ impl BackPropogatable for Neuron {
 }
 
 fn sigmoid(input: f64) -> f64 {
-    1 as f64 / (1 as f64 + std::f64::consts::E.powf(-input))
+    1_f64 / (1_f64 + std::f64::consts::E.powf(-input))
 }

@@ -12,11 +12,8 @@ fn main() {
     // println!("prediction:{}", prediction);
 
     //weight, height
-    let mut data:Vec<Vec<i32>> = Vec::new();
-    data.push(vec![115, 66]);
-    data.push(vec![175, 78]);
-    data.push(vec![205, 72]);
-    data.push(vec![120, 67]);
+    let data:Vec<Vec<i32>> = vec![vec![115, 66], vec![175, 78], vec![205, 72], vec![120, 67]];
+
     let answers: Vec<f64> = vec![1.0,0.0,0.0,1.0];  
 
     let mut network = Network::default();
@@ -41,13 +38,15 @@ struct Network{
 
 }
 
+// The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer. 
+// The number of hidden neurons should be less than twice the size of the input layer.
 impl Default for Network {
     fn default() -> Self {
         let neurons = vec![
             Neuron::default(), Neuron::default(), Neuron::default(), //input nodes
             Neuron::default(), Neuron::default(), //hidden nodes
             Neuron::default()]; //output nodes
-        Network { neurons: neurons }
+        Network { neurons }
     }
 }
 trait Learnable {
@@ -57,7 +56,7 @@ trait Learnable {
 
 impl Learnable for Network {
     fn predict(&self, input1: f64, input2: f64) -> f64 {
-        return self.neurons[5].compute(
+        self.neurons[5].compute(
             self.neurons[4].compute(
                 self.neurons[2].compute(input1, input2), 
                 self.neurons[1].compute(input1, input2)
@@ -66,7 +65,7 @@ impl Learnable for Network {
                 self.neurons[1].compute(input1, input2), 
                 self.neurons[0].compute(input1, input2)
             )
-        );
+        )
     }
 
     fn train(&mut self, data: Vec<Vec<i32>>, answers: Vec<f64>) {
@@ -77,8 +76,8 @@ impl Learnable for Network {
 
             let mut predictions:Vec<f64> = Vec::new();
 
-            for i in 0..data.len() -1 {
-                predictions.push(self.predict(data[i][0] as f64, data[i][1] as f64));
+            for item in data.iter().take(data.len() -1){
+                predictions.push(self.predict(item[0] as f64, item[1] as f64));
             }
 
             let this_epoch_loss = mean_square_loss(&answers, predictions);
@@ -109,6 +108,6 @@ fn mean_square_loss(correct_answers: &Vec<f64>, predicted_answers: Vec<f64>) -> 
       let error = correct_answers[i] - predicted_answers[i];
       sum_square += error * error;
     }
-    return sum_square / (correct_answers.len() as f64);
+    sum_square / (correct_answers.len() as f64)
 }
 
