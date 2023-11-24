@@ -1,4 +1,3 @@
-
 use crate::neuron::{Neuron, Compute, BackPropogatable};
 //although this is a 1d list, we connect them during usage
 pub struct Network{
@@ -57,17 +56,17 @@ impl Learnable for Network {
                 if this_epoch_loss < best_epoch_loss {
                 best_epoch_loss = this_epoch_loss;
                 self.neurons[epoch % 6].remember();
-            } else {
+                } else {
                 self.neurons[epoch % 6].forget();
-            }
+                }
 
-            //log every 10th training epoch
-            if epoch % 10 == 0{
-                println!("Epoch: {} | bestEpochLoss: {} | thisEpochLoss: {}", epoch, best_epoch_loss, this_epoch_loss);
-            } 
+                //log every 10th training epoch
+                if epoch % 100 == 0{
+                    println!("Epoch: {} | bestEpochLoss: {} | thisEpochLoss: {}", epoch, best_epoch_loss, this_epoch_loss);
+                } 
+            }
         }
     }
-}
 }
 
 fn mean_square_loss(correct_answers: &Vec<f64>, predicted_answers: Vec<f64>) -> f64{
